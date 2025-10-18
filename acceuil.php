@@ -87,6 +87,10 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
             box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
         }
 
+        .nav-actions { display:flex; gap:10px; align-items:center }
+        .profile-btn { background: linear-gradient(45deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); padding:8px 12px; border-radius:25px; color:#fff; text-decoration:none }
+        .profile-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.25) }
+
         .cart-count {
             background: #ff0055;
             border-radius: 50%;
@@ -536,20 +540,30 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
 </head>
 <body>
     <nav>
-        <div class="logo">⚽ Best Dribbleur Store</div>
+        <div class="logo">
+            <!-- logo image (fallback to text if not loaded) -->
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9SBs4aa8Qgupeysy-THcIR8-bRBQHiw1ITQ&s" alt="Best Dribbleur Store" style="height:40px;border-radius:6px;object-fit:cover">
+            <span class="sr-only">Dribbleur Store</span>
+        </div>
         <div class="nav-links">
             <a href="#home">Accueil</a>
             <a href="#comptes">Comptes</a>
             <a href="#garanties">Garanties</a>
             <a href="#avis">Avis</a>
         </div>
-        <button class="cart-btn" onclick="openCart()">
-            🛒 Panier <span class="cart-count" id="cartCount">0</span>
-        </button>
-        <a class="cart-btn" href="profile.php" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px">
-            profil
-        </a>
-        
+        <div class="nav-actions" style="display:flex;gap:10px;align-items:center">
+            <button class="cart-btn" onclick="openCart()" title="Voir le panier">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h15l-1.5 9h-12L4 2H2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="margin-left:6px">Panier</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+
+            <a class="profile-btn" href="profile.php" title="Mon profil" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:25px;background:rgba(255,255,255,0.04);color:#fff;text-decoration:none">
+                <!-- profile icon SVG -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="12" cy="8" r="3.2" stroke="#fff" stroke-width="1.4"/><path d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Profil</span>
+            </a>
+        </div>
     </nav>
 
     <section class="hero" id="home">
@@ -570,6 +584,40 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
             <button class="cta-button"  id ="comptes"  onclick="document.getElementById('articles').scrollIntoView({behavior: 'smooth'})">
                 Voir les Comptes
             </button>
+        </div>
+    </section>
+
+    
+
+<!-- Articles section -->
+    <?php
+    try {
+        $pdo = new PDO('mysql:host=localhost;dbname=efootball;charset=utf8mb4','root','');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $pdo->query('SELECT title, slug, content, image, created_at FROM articles ORDER BY created_at DESC LIMIT 6');
+        $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $recent = [];
+    }
+    ?>
+
+     <section class="features-section" id="articles" style="background:linear-gradient(180deg,#071426,#0f1724); padding:60px 50px;">
+        <h2 class="section-title">Nos Articles </h2>
+        <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px">
+            <?php if (empty($recent)): ?>
+                <p style="color:#ccc;text-align:center;grid-column:1/-1">Aucun article pour le moment.</p>
+            <?php else: ?>
+                <?php foreach($recent as $art): ?>
+                    <div style=" background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+                        <?php if (!empty($art['image'])): ?>
+                            <img src="uploads/articles/<?php echo htmlspecialchars($art['image']); ?>" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+                        <?php endif; ?>
+                        <h3 style="color:#00d4ff;margin:0 0 8px"><?php echo htmlspecialchars($art['title']); ?></h3>
+                        <p style="color:#d0d6db"><?php echo htmlspecialchars(mb_strimwidth(strip_tags($art['content']), 0, 140, '...')); ?></p>
+                        <div style="margin-top:10px"><a href="/efootball/list_articles.php" style="color:#00ff88">Voir tous les articles</a></div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -609,37 +657,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
         </div>
     </section>
 
-    <!-- Articles section -->
-    <?php
-    try {
-        $pdo = new PDO('mysql:host=localhost;dbname=efootball;charset=utf8mb4','root','');
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $pdo->query('SELECT title, slug, content, image, created_at FROM articles ORDER BY created_at DESC LIMIT 6');
-        $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        $recent = [];
-    }
-    ?>
-
-    <section class="features-section" id="articles" style="background:linear-gradient(180deg,#071426,#0f1724); padding:60px 50px;">
-        <h2 class="section-title">Nos Articles & Photos</h2>
-        <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px">
-            <?php if (empty($recent)): ?>
-                <p style="color:#ccc;text-align:center;grid-column:1/-1">Aucun article pour le moment.</p>
-            <?php else: ?>
-                <?php foreach($recent as $art): ?>
-                    <div style=" background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
-                        <?php if (!empty($art['image'])): ?>
-                            <img src="uploads/articles/<?php echo htmlspecialchars($art['image']); ?>" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
-                        <?php endif; ?>
-                        <h3 style="color:#00d4ff;margin:0 0 8px"><?php echo htmlspecialchars($art['title']); ?></h3>
-                        <p style="color:#d0d6db"><?php echo htmlspecialchars(mb_strimwidth(strip_tags($art['content']), 0, 140, '...')); ?></p>
-                        <div style="margin-top:10px"><a href="/efootball/list_articles.php" style="color:#00ff88">Voir tous les articles</a></div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-    </section>
+    
 
     <section class="testimonials" id="avis">
         <h2 class="section-title">Avis Clients</h2>
@@ -707,8 +725,8 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
             <div class="footer-section">
                 <h3>Contact</h3>
                 <ul>
-                    <li>📧 support@efootballstore.com</li>
-                    <li>💬 Discord: EFS Official</li>
+                    <li>📧 diagneibeu10@gmail.com</li>
+                    <li>💬 Discord: BEST DRIBBLEUR SN </li>
                     <li>📱 WhatsApp: +221 77 507 29 36</li>
                 </ul>
             </div>
@@ -858,33 +876,92 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
             `).join('');
         }
 
-        function filterAccounts(type) {
+        function filterAccounts(type, btn) {
             currentFilter = type;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn && btn.classList) btn.classList.add('active');
             renderAccounts(type);
         }
 
         function addToCart(id) {
             const account = accounts.find(a => a.id === id);
+            if (!account) return;
             cart.push(account);
             updateCartCount();
             showNotification('✓ Ajouté au panier !');
         }
 
         function updateCartCount() {
-            document.getElementById('cartCount').textContent = cart.length;
+            const el = document.getElementById('cartCount');
+            if (el) el.textContent = cart.length;
+        }
+
+        function showNotification(message) {
+            const n = document.createElement('div');
+            n.textContent = message;
+            n.style.position = 'fixed';
+            n.style.right = '20px';
+            n.style.bottom = '20px';
+            n.style.background = 'linear-gradient(45deg,#00d4ff,#00ff88)';
+            n.style.color = '#042';
+            n.style.padding = '10px 14px';
+            n.style.borderRadius = '8px';
+            n.style.boxShadow = '0 6px 20px rgba(0,0,0,0.2)';
+            n.style.zIndex = 3000;
+            document.body.appendChild(n);
+            setTimeout(() => { n.style.opacity = '0'; n.style.transition = 'opacity 400ms'; }, 1400);
+            setTimeout(() => n.remove(), 2000);
         }
 
         function openCart() {
             const modal = document.getElementById('cartModal');
             const cartItems = document.getElementById('cartItems');
-            
+            if (!modal || !cartItems) return;
+
             if (cart.length === 0) {
                 cartItems.innerHTML = '<p style="text-align: center; padding: 40px; opacity: 0.7;">Votre panier est vide</p>';
+            } else {
+                cartItems.innerHTML = cart.map((it, idx) => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)">
+                        <div>
+                            <div style="font-weight:600">${it.title}</div>
+                            <div style="font-size:12px;opacity:0.8">${it.coins} • ${it.players} joueurs</div>
+                        </div>
+                        <div style="text-align:right">
+                            <div style="font-weight:700">${it.price} FCFA</div>
+                            <button onclick="removeFromCart(${idx})" style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#ff4d6d;color:#fff;border:none">Supprimer</button>
+                        </div>
+                    </div>
+                `).join('');
             }
-        
+
+            modal.style.display = 'flex';
         }
 
+        function closeCart() {
+            const modal = document.getElementById('cartModal');
+            if (modal) modal.style.display = 'none';
+        }
 
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide.');
+                return;
+            }
+            // simulation de checkout
+            alert('Procéder au paiement (simulation) - ' + cart.length + ' article(s)');
+            cart = [];
+            updateCartCount();
+            closeCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            openCart();
+        }
+
+        // initialisation
+        renderAccounts();
+        updateCartCount();
 

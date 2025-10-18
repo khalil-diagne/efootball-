@@ -23,5 +23,6 @@ if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_byt
         <button type="submit">Publier</button>
         <a href="profile.php" style="margin-left:12px">Annuler</a>
     </form>
+
 </body>
 </html>

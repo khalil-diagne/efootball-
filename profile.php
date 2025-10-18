@@ -25,7 +25,7 @@ if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
 // Afficher uniquement le profil de l'utilisateur connecté (ne pas permettre l'affichage d'autres profils)
 $requested = $_SESSION['username'];
 
-$stmt = $pdo->prepare('SELECT prenom, nom, email, username FROM visiteur WHERE username = :username LIMIT 1');
+ $stmt = $pdo->prepare('SELECT prenom, nom, email, username, avatar FROM visiteur WHERE username = :username LIMIT 1');
 $stmt->execute([':username' => $requested]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -41,37 +41,48 @@ if (!$user) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Profil - <?php echo isset($user['username']) ? htmlspecialchars($user['username']) : 'Utilisateur'; ?></title>
-    <style>
-        body{font-family: Arial, Helvetica, sans-serif; padding:30px; background:#f7f7f7}
-        .card{background:#fff;padding:20px;border-radius:8px;max-width:600px;margin:0 auto;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
-        .meta{color:#666;font-size:14px}
-        a.button{display:inline-block;margin-top:15px;padding:8px 14px;background:#007bff;color:#fff;border-radius:6px;text-decoration:none}
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <?php if ($notFound): ?>
-    <div class="card">
-        <h2>Profil introuvable</h2>
-        <p>Le profil demandé n'existe pas.</p>
-        <a class="button" href="acceuil.php">Retour</a>
+    <div class="container notfound">
+        <div class="profile-card">
+            <h2>Profil introuvable</h2>
+            <p>Le profil demandé n'existe pas.</p>
+            <a class="btn btn-outline" href="acceuil.php">Retour</a>
+        </div>
     </div>
 <?php else: ?>
-    <div class="card">
-        <h2>Profil de <?php echo htmlspecialchars($user['prenom'] . ' ' . $user['nom']); ?></h2>
-        <p class="meta"><strong>Nom d'utilisateur :</strong> <?php echo htmlspecialchars($user['username']); ?></p>
-        <p class="meta"><strong>Email :</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div>
+                    <?php if (!empty($user['avatar'])): ?>
+                        <img class="avatar-img" src="uploads/avatars/<?php echo htmlspecialchars($user['avatar']); ?>" alt="avatar">
+                    <?php else: ?>
+                        <div class="avatar"><?php echo strtoupper(substr($user['prenom'] ?? $user['username'],0,1)); ?></div>
+                    <?php endif; ?>
+                </div>
+                <div>
+                    <div class="profile-name"><?php echo htmlspecialchars($user['prenom'] . ' ' . $user['nom']); ?></div>
+                    <div class="profile-meta"><strong>Nom d'utilisateur :</strong> <?php echo htmlspecialchars($user['username']); ?></div>
+                    <div class="profile-meta"><strong>Email :</strong> <?php echo htmlspecialchars($user['email']); ?></div>
+                </div>
+            </div>
 
-        <?php if (isset($_GET['updated']) && $_GET['updated'] == '1'): ?>
-            <p style="color:green">Profil mis à jour avec succès.</p>
-        <?php endif; ?>
-        <?php if (isset($_GET['pw_changed']) && $_GET['pw_changed'] == '1'): ?>
-            <p style="color:green">Mot de passe mis à jour.</p>
-        <?php endif; ?>
+            <?php if (isset($_GET['updated']) && $_GET['updated'] == '1'): ?>
+                <div class="success-text">Profil mis à jour avec succès.</div>
+            <?php endif; ?>
+            <?php if (isset($_GET['pw_changed']) && $_GET['pw_changed'] == '1'): ?>
+                <div class="success-text">Mot de passe mis à jour.</div>
+            <?php endif; ?>
 
-        <p class="meta">Ceci est votre profil.</p>
-        <a class="button" href="profile_edit.php">Éditer mon profil</a>
-        <a class="button" href="change_password.php" style="margin-left:8px; background:#28a745">Changer mot de passe</a>
-        <a class="button" href="logout.php" style="background:#dc3545;margin-left:10px">Se déconnecter</a>
+            <div class="profile-actions">
+                <a class="btn btn-primary" href="profile_edit.php">Éditer mon profil</a>
+                <a class="btn btn-success" href="change_password.php">Changer mot de passe</a>
+                <a class="btn btn-danger" href="logout.php">Se déconnecter</a>
+            </div>
+        </div>
     </div>
 <?php endif; ?>
 </body>
