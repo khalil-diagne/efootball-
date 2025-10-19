@@ -19,6 +19,7 @@ if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_byt
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
         <label>Titre<br><input type="text" name="title" required maxlength="255"></label><br><br>
         <label>Contenu<br><textarea name="content" rows="8" cols="60" required></textarea></label><br><br>
+        <label>Prix (en FCFA)<br><input type="number" name="price" required step="0.01" min="0"></label><br><br>
         <label>Image (jpg/png/gif, max 2MB)<br><input type="file" name="image" accept="image/*" required></label><br><br>
         <button type="submit">Publier</button>
         <a href="profile.php" style="margin-left:12px">Annuler</a>

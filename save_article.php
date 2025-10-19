@@ -19,9 +19,10 @@ if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $
 
 $title = trim($_POST['title'] ?? '');
 $content = trim($_POST['content'] ?? '');
+$price = filter_var($_POST['price'] ?? 0, FILTER_VALIDATE_FLOAT);
 
-if ($title === '' || $content === '') {
-    die('Titre et contenu requis');
+if ($title === '' || $content === '' || $price === false || $price < 0) {
+    die('Titre, contenu et prix valides sont requis');
 }
 
 // Traiter l'upload
@@ -70,9 +71,9 @@ try {
         if ($count === 0) break;
         $slug = $base . '-' . $i; $i++;
     }
-
-    $stmt = $pdo->prepare('INSERT INTO articles (title, slug, content, image, author_username) VALUES (:t, :s, :c, :img, :author)');
-    $stmt->execute([':t'=>$title, ':s'=>$slug, ':c'=>$content, ':img'=>$safeName, ':author'=>$_SESSION['username']]);
+    
+    $stmt = $pdo->prepare('INSERT INTO articles (title, slug, content, price, image, author_username) VALUES (:t, :s, :c, :p, :img, :author)');
+    $stmt->execute([':t'=>$title, ':s'=>$slug, ':c'=>$content, ':p' => $price, ':img'=>$safeName, ':author'=>$_SESSION['username']]);
 
     header('Location: list_articles.php?created=1');
     exit();

@@ -944,15 +944,34 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
         }
 
         function checkout() {
-            if (cart.length === 0) {
-                alert('Votre panier est vide.');
-                return;
-            }
-            // simulation de checkout
-            alert('Procéder au paiement (simulation) - ' + cart.length + ' article(s)');
-            cart = [];
-            updateCartCount();
-            closeCart();
+             if (cart.length === 0) {
+                 alert('Votre panier est vide.');
+                 return;
+             }
+ 
+             // Envoyer les données du panier au serveur
+             fetch('checkout.php', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(cart)
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     alert('Commande réussie ! Votre numéro de commande est : ' + data.order_id);
+                     cart = []; // Vider le panier
+                     updateCartCount();
+                     closeCart();
+                 } else {
+                     alert('Erreur: ' + data.message);
+                 }
+             })
+             .catch(error => {
+                 console.error('Erreur lors du checkout:', error);
+                 alert('Une erreur technique est survenue.');
+             });
         }
 
         function removeFromCart(index) {
@@ -964,4 +983,3 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
         // initialisation
         renderAccounts();
         updateCartCount();
-
