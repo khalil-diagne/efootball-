@@ -116,7 +116,7 @@ try {
                             <img class="article-image" src="uploads/articles/<?php echo htmlspecialchars($r['image']); ?>" alt="">
                         <?php endif; ?>
                         <h3 class="article-title"><?php echo htmlspecialchars($r['title']); ?></h3>
-                        <div class="article-meta">Par <?php echo htmlspecialchars($r['author_username']); ?> — <?php echo htmlspecialchars($r['created_at']); ?></div>
+                        <div class="article-meta">Publié par BEST DRIBBLEUR SN  </div>
                         <div class="article-meta" style="font-weight: bold; color: #00ff88; font-size: 1.2em; margin-top: 8px;"><?php echo htmlspecialchars(number_format($r['price'], 0, ',', ' ')); ?> FCFA</div>
                         <div style="margin-top:8px">
                             <button class="btn btn-primary" onclick='addArticleToCart(<?php echo json_encode($r, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>)'>Acheter</button>

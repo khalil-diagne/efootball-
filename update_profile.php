@@ -64,7 +64,7 @@ try {
         $destPath = __DIR__ . '/uploads/avatars/' . $avatarFilename;
 
         // create image resource from upload
-        if ($mime === 'image/jpeg') {
+        if($mime === 'image/jpeg') {
             $src = imagecreatefromjpeg($file['tmp_name']);
         } else {
             $src = imagecreatefrompng($file['tmp_name']);
