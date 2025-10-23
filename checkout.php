@@ -32,22 +32,8 @@ try {
 
 // 4. Logique d'enregistrement de la commande
 try {
-    // Assurer que les colonnes ID existent (auto-migration simple)
-    try {
-        // La table visiteur a besoin d'un ID pour la clé étrangère
-        $pdo->query("ALTER TABLE `visiteur` ADD COLUMN `id` INT AUTO_INCREMENT PRIMARY KEY FIRST;");
-    } catch (PDOException $e) {
-        // Ignorer si la colonne existe déjà
-    }
-    try {
-        // La table articles a besoin d'un ID pour la clé étrangère
-        $pdo->query("ALTER TABLE `articles` ADD COLUMN `id` INT AUTO_INCREMENT PRIMARY KEY FIRST;");
-    } catch (PDOException $e) {
-        // Ignorer si la colonne existe déjà
-    }
-
     // Récupérer l'ID de l'utilisateur
-    $stmtUser = $pdo->prepare('SELECT id FROM visiteur WHERE username = :username');
+    $stmtUser = $pdo->prepare('SELECT id FROM visiteur WHERE username = :username LIMIT 1');
     $stmtUser->execute([':username' => $_SESSION['username']]);
     $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
@@ -57,8 +43,16 @@ try {
     $userId = $user['id'];
 
     // Calculer le prix total
+    // On valide que les articles du panier existent bien en base de données
+    $articleIds = array_column($cart, 'id');
+    $placeholders = implode(',', array_fill(0, count($articleIds), '?'));
+    $stmtCheck = $pdo->prepare("SELECT id, price FROM articles WHERE id IN ($placeholders)");
+    $stmtCheck->execute($articleIds);
+    $dbArticles = $stmtCheck->fetchAll(PDO::FETCH_KEY_PAIR);
+
     $totalPrice = array_reduce($cart, function ($sum, $item) {
-        return $sum + (isset($item['price']) ? ($item['price'] * 1) : 0); // 1 est la quantité, à adapter si besoin
+        // Utiliser le prix de la base de données, pas celui envoyé par le client
+        return $sum + (isset($dbArticles[$item['id']]) ? ($dbArticles[$item['id']] * 1) : 0); // 1 est la quantité, à adapter si besoin
     }, 0);
 
     // Insérer dans la table `orders`
@@ -66,16 +60,15 @@ try {
     $stmtOrder = $pdo->prepare('INSERT INTO orders (user_id, total_price) VALUES (:user_id, :total_price)');
     $stmtOrder->execute([':user_id' => $userId, ':total_price' => $totalPrice]);
     $orderId = $pdo->lastInsertId();
-
-    // Insérer chaque article dans `order_items`
-    $stmtItem = $pdo->prepare('INSERT INTO order_items (order_id, article_id, quantity, price) VALUES (:order_id, :article_id, :quantity, :price)');
     foreach ($cart as $item) {
-        if (isset($item['id']) && isset($item['price'])) {
+        if (isset($item['id']) && isset($dbArticles[$item['id']])) {
+            $stmtItem = $pdo->prepare('INSERT INTO order_items (order_id, article_id, quantity, price) VALUES (:order_id, :article_id, :quantity, :price)');
             $stmtItem->execute([
                 ':order_id' => $orderId, 
                 ':article_id' => $item['id'], // Assurez-vous que les articles dans le JS ont un 'id'
                 ':quantity' => 1, // Quantité fixe pour le moment
-                ':price' => $item['price']]);
+                ':price' => $dbArticles[$item['id']] // Prix sécurisé depuis la BDD
+            ]);
         }
     }
     $pdo->commit();

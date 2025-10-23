@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("DEBUG POST: " . print_r($_POST, true));
 
         // Préparation de la requête (n'exécutez pas encore) - affichez l'état des paramètres
-        $sql = "INSERT INTO visiteur (prenom, nom, email, username, password ) VALUES (:prenom, :nom, :email, :username, :password)";
+        $sql = "INSERT INTO visiteur (prenom, nom, email, username, password, role) VALUES (:prenom, :nom, :email, :username, :password, 'user')"; // Assigne le rôle 'user' par défaut
         error_log("DEBUG SQL: $sql");
         error_log("DEBUG params: prenom=$prenom, nom=$nom, email=$email, username=$username");
 
@@ -83,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['prenom'] = $prenom;
         $_SESSION['nom'] = $nom;
         $_SESSION['email'] = $email;
+        $_SESSION['role'] = 'user'; // Rôle par défaut pour les nouveaux inscrits
         $_SESSION['logged'] = true;
 
 
@@ -95,6 +96,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-
-

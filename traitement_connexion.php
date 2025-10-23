@@ -26,17 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $sql = 'SELECT prenom, nom, email, username, password FROM visiteur WHERE username = :username LIMIT 1';
+    $sql = 'SELECT id, prenom, nom, email, username, password, role FROM visiteur WHERE username = :username LIMIT 1';
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':username', $username);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($result && isset($result['password']) && password_verify($password, $result['password'])) {
+        $_SESSION['user_id_from_db'] = $result['id']; // Important pour les pages admin
         $_SESSION['username'] = $result['username'];
         $_SESSION['prenom'] = $result['prenom'];
         $_SESSION['nom'] = $result['nom'];
         $_SESSION['email'] = $result['email'];
+        $_SESSION['role'] = $result['role']; // <-- C'est la ligne la plus importante !
         $_SESSION['logged'] = true;
 
         header('Location: acceuil.php');
