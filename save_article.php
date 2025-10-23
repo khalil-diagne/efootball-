@@ -75,7 +75,7 @@ try {
     $stmt = $pdo->prepare('INSERT INTO articles (title, slug, content, price, image, author_username) VALUES (:t, :s, :c, :p, :img, :author)');
     $stmt->execute([':t'=>$title, ':s'=>$slug, ':c'=>$content, ':p' => $price, ':img'=>$safeName, ':author'=>$_SESSION['username']]);
 
-    header('Location: list_articles.php?created=1');
+    header('Location: admin_articles.php');
     exit();
 } catch (PDOException $e) {
     die('Erreur BDD: '.$e->getMessage());

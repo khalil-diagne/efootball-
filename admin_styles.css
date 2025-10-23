@@ -122,3 +122,37 @@ body {
     border-radius: 5px;
     margin-bottom: 20px;
 }
+
+/* Styles pour les boutons et liens */
+.admin-btn-primary {
+    background-color: #3498db;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+}
+.admin-btn-primary:hover {
+    background-color: #2980b9;
+}
+
+/* Styles pour les badges de statut */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: capitalize;
+}
+.status-en_attente {
+    background-color: #f39c12; /* Orange */
+}
+.status-validee {
+    background-color: #2ecc71; /* Vert */
+}
+.status-annulee {
+    background-color: #e74c3c; /* Rouge */
+}
