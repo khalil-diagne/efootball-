@@ -60,7 +60,7 @@ try {
         <?php include 'admin_sidebar.php'; // Inclure la barre latérale réutilisable ?>
 
     <div class="admin-content">
-        <h1>Bienvenue, <?php echo htmlspecialchars($_SESSION['username']); ?> !</h1>
+        <h1>Bienvenue dans la page Admin de , <?php echo htmlspecialchars($_SESSION['username']); ?> </h1>
         <p>Ceci est votre tableau de bord d'administration. Vous pouvez gérer les utilisateurs, les articles et les commandes.</p>
 
         <div class="stats-grid">

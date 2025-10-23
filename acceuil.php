@@ -50,16 +50,17 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
                 <span style="margin-left:6px">historique</span></button>
 
             <a class="profile-btn" href="profile.php" title="Mon profil" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:25px;background:rgba(255,255,255,0.04);color:#fff;text-decoration:none">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="12" cy="8" r="3.2" stroke="#fff" stroke-width="1.4"/><path d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Profil</span>
+            </a>
                 <!-- Bouton Admin visible uniquement pour les administrateurs -->
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <a class="profile-btn" href="admin.php" title="Panneau d'administration" style="background: #e74c3c; color: white;">
+                    <a class="profile-btn" href="admin.php" title="Panneau d'administration" style="background: #ff0000ff; color: black;">
                         Admin
                     </a>
                 <?php endif; ?>
                 <!-- profile icon SVG -->
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="12" cy="8" r="3.2" stroke="#fff" stroke-width="1.4"/><path d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Profil</span>
-            </a>
+                
         </div>
     </nav>
 
@@ -105,7 +106,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
                 <p style="color:#ccc;text-align:center;grid-column:1/-1">Aucun article pour le moment.</p>
             <?php else: ?>
                 <?php foreach($recent as $art): ?>
-                    <div style=" background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+                    <div class="article-preview-card">
                         <?php if (!empty($art['image'])): ?>
                             <img src="uploads/articles/<?php echo htmlspecialchars($art['image']); ?>" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
                         <?php endif; ?>

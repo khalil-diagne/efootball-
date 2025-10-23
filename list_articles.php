@@ -15,79 +15,12 @@ try {
 <head>
     <meta charset="utf-8">
     <title>Articles</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Assurez-vous que ce fichier existe et est correct -->
-    <style>
-        /* Styles pour le panier (copiés depuis acceuil.php pour la cohérence) */
-        .cart-btn {
-            background: linear-gradient(45deg, #00d4ff, #0099ff);
-            padding: 10px 25px;
-            border-radius: 25px;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .cart-count {
-            background: #ff0055;
-            border-radius: 50%;
-            padding: 2px 8px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            color: #fff;
-        }
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 30px;
-            cursor: pointer;
-            color: #fff;
-        }
-        .modal h2 {
-            color: #00d4ff;
-            margin-bottom: 20px;
-        }
-        .cta-button {
-            padding: 18px 45px;
-            font-size: 18px;
-            background: linear-gradient(45deg, #00d4ff, #0099ff);
-            border: none;
-            border-radius: 50px;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.4);
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="Style_acceuil.css"> <!-- Ajout pour récupérer les styles du panier -->
 </head>
 <body>
     <nav style="padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 12, 41, 0.8); backdrop-filter: blur(10px);">
-    <a href="acceuil.php" style="font-size: 28px; font-weight: bold; color: #fff; text-decoration: none;">eFootball Store</a>
+    <a href="acceuil.php" style="font-size: 28px; font-weight: bold; color: #fff; text-decoration: none;">Best Dribbleur Store</a>
         <div>
 
 

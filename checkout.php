@@ -72,7 +72,6 @@ try {
         }
     }
     $pdo->commit();
-
     echo json_encode(['success' => true, 'message' => 'Commande enregistrée avec succès!', 'order_id' => $orderId]);
 } catch (Exception $e) {
     $pdo->rollBack();
