@@ -145,180 +145,20 @@ $_SESSION['user_id_from_db'] = $stmtAdmin->fetchColumn();
         </div>
     </div>
 </body>
-</html>
-
-```
-
-### Améliorations et bonnes pratiques incluses
+<footer>
+    <div class="footer-content">
+<p>
+    Améliorations et bonnes pratiques incluses
 
 1.  **Sécurité renforcée** :
     *   **Protection CSRF** : Un jeton unique (`csrf_token`) est généré et vérifié pour chaque action (suppression, changement de rôle). Cela empêche des sites malveillants de forcer un administrateur à effectuer des actions à son insu.
     *   **Auto-protection** : Le script empêche un administrateur de supprimer son propre compte ou de changer son propre rôle via l'interface, évitant ainsi de se bloquer l'accès.
     *   **Confirmation JavaScript** : Une boîte de dialogue `confirm()` demande une confirmation avant toute suppression, réduisant les risques de clics accidentels.
 
-2.  **Modularité et organisation** :
-    *   J'ai extrait la barre latérale dans un fichier séparé `admin_sidebar.php` et les styles dans `admin_styles.css`. Cela rend le code plus propre et facile à maintenir. Vous pourrez réutiliser ces fichiers dans `admin_articles.php` et `admin_orders.php`.
+</p>
+    </div>
+</footer>
+</html>
+ 
 
-3.  **Ergonomie** :
-    *   Le changement de rôle se fait via une liste déroulante (`<select>`) qui soumet automatiquement le formulaire `onchange`, rendant l'action rapide et intuitive.
-    *   Des messages clairs (`$message` et `$error`) informent l'administrateur du résultat de ses actions.
 
-### Fichiers supplémentaires à créer
-
-Pour que la page `admin_users.php` fonctionne parfaitement, vous devez créer ces deux fichiers :
-
-#### 1. `admin_sidebar.php` (Barre latérale réutilisable)
-
-Créez le fichier `c:\xampp\htdocs\efootball\admin_sidebar.php` :
-
-```diff
---- /dev/null
-+++ b/c:/xampp/htdocs/efootball/admin_sidebar.php
-@@ -0,0 +1,11 @@
-+<div class="admin-sidebar">
-+    <h2>Admin Dashboard</h2>
-+    <ul>
-+        <li><a href="admin.php">Tableau de bord</a></li>
-+        <li><a href="admin_users.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'admin_users.php' ? 'active' : ''); ?>">Gestion des utilisateurs</a></li>
-+        <li><a href="admin_articles.php">Gestion des articles</a></li>
-+        <li><a href="admin_orders.php">Gestion des commandes</a></li>
-+        <li><a href="acceuil.php">Retour au site</a></li>
-+        <li><a href="logout.php">Déconnexion</a></li>
-+    </ul>
-+</div>
-```
-
-*Note : J'ai ajouté une petite logique PHP pour mettre en surbrillance le lien de la page active (`class="active"`).*
-
-#### 2. `admin_styles.css` (Styles partagés pour l'administration)
-
-Créez le fichier `c:\xampp\htdocs\efootball\admin_styles.css` :
-
-```diff
---- /dev/null
-+++ b/c:/xampp/htdocs/efootball/admin_styles.css
-@@ -0,0 +1,111 @@
-+/* Styles généraux pour le panneau d'administration */
-+body {
-+    font-family: Arial, sans-serif;
-+    background-color: #f4f4f9;
-+    margin: 0;
-+    padding: 0;
-+    color: #333;
-+}
-+
-+.admin-container {
-+    display: flex;
-+    min-height: 100vh;
-+}
-+
-+.admin-sidebar {
-+    width: 250px;
-+    flex-shrink: 0;
-+    background-color: #2c3e50; /* Bleu foncé */
-+    color: #ecf0f1; /* Blanc cassé */
-+    padding: 20px;
-+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-+}
-+
-+.admin-sidebar h2 {
-+    text-align: center;
-+    color: #3498db; /* Bleu clair */
-+    margin-bottom: 30px;
-+}
-+
-+.admin-sidebar ul {
-+    list-style: none;
-+    padding: 0;
-+}
-+
-+.admin-sidebar ul li {
-+    margin-bottom: 10px;
-+}
-+
-+.admin-sidebar ul li a {
-+    display: block;
-+    color: #ecf0f1;
-+    text-decoration: none;
-+    padding: 10px 15px;
-+    border-radius: 5px;
-+    transition: background-color 0.3s ease;
-+}
-+
-+.admin-sidebar ul li a:hover, .admin-sidebar ul li a.active {
-+    background-color: #34495e; /* Bleu plus foncé au survol */
-+}
-+
-+.admin-content {
-+    flex-grow: 1;
-+    padding: 30px;
-+    background-color: #fff;
-+}
-+
-+.admin-content h1 {
-+    color: #2c3e50;
-+    margin-top: 0;
-+    margin-bottom: 20px;
-+    border-bottom: 2px solid #f0f0f0;
-+    padding-bottom: 10px;
-+}
-+
-/* Styles pour les tables */
-+.admin-table-wrapper {
-+    overflow-x: auto; /* Pour la responsivité sur petits écrans */
-+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-+    border-radius: 8px;
-+}
-+
-+.admin-table {
-+    width: 100%;
-+    border-collapse: collapse;
-+}
-+
-+.admin-table th, .admin-table td {
-+    padding: 12px 15px;
-+    text-align: left;
-+    border-bottom: 1px solid #e0e0e0;
-+}
-+
-+.admin-table thead th {
-+    background-color: #f7f9fc;
-+    font-weight: 600;
-+    color: #555;
-+}
-+
-+.admin-table tbody tr:hover {
-+    background-color: #fdfdfe;
-+}
-+
-/* Styles pour les boutons et alertes */
-+.admin-btn-danger {
-+    background-color: #e74c3c;
-+    color: white;
-+    border: none;
-+    padding: 6px 12px;
-+    border-radius: 5px;
-+    cursor: pointer;
-+    font-size: 13px;
-+}
-+.admin-btn-danger:hover {
-+    background-color: #c0392b;
-+}
-+
-+.admin-alert-success {
-+    background-color: #d4edda;
-+    color: #155724;
-+    padding: 10px;
-+    border: 1px solid #c3e6cb;
-+    border-radius: 5px;
-+    margin-bottom: 20px;
-+}
-+
-+.admin-alert-error {
-+    background-color: #f8d7da;
-+    color: #721c24;
-+    padding: 10px;
-+    border: 1px solid #f5c6cb;
-+    border-radius: 5px;
-+    margin-bottom: 20px;
-+}

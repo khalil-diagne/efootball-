@@ -82,6 +82,10 @@ if (!$user) {
                 <a class="btn btn-success" href="change_password.php">Changer mot de passe</a>
                 <a class="btn btn-danger" href="logout.php">Se déconnecter</a>
             </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="acceuil.php" class="btn btn-outline">Retour à l'accueil</a>
+            </div>
         </div>
     </div>
 <?php endif; ?>

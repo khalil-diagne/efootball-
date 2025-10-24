@@ -545,3 +545,66 @@
             .nav-links { display: none; }
             .accounts-grid { grid-template-columns: 1fr; }
         }
+
+        /* Styles pour les tableaux de données (ex: historique commandes) */
+        .data-table-wrapper {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto; /* Pour la responsivité */
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #fff;
+        }
+
+        .data-table th, .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .data-table thead th {
+            color: #00d4ff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom-width: 2px;
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.3s;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .data-table td:first-child {
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        /* Nouveaux styles pour les badges de statut */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            text-transform: capitalize;
+            display: inline-block;
+        }
+        .status-en_attente {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+        .status-validee {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+        .status-annulee {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }

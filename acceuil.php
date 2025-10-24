@@ -22,47 +22,43 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
 
     
 </head>
-<body>
-    <nav>
-        <div class="logo">
-            <!-- logo image (fallback to text if not loaded) -->
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9SBs4aa8Qgupeysy-THcIR8-bRBQHiw1ITQ&s" alt="Best Dribbleur Store" style="height:40px;border-radius:6px;object-fit:cover">
-            <span class="sr-only">Dribbleur Store</span>
-        </div>
-        <div class="nav-links">
-            <a href="#home">Accueil</a>
-            <a href="#comptes">Comptes</a>
-            <a href="#garanties">Garanties</a>
-            <a href="#avis">Avis</a>
-        </div>
-        <div class="nav-actions" style="display:flex;gap:10px;align-items:center">
-            <button class="cart-btn" onclick="openCart()" title="Voir le panier">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h15l-1.5 9h-12L4 2H2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span style="margin-left:6px">Panier</span>
-                <span class="cart-count" id="cartCount">0</span>
-            </button>
-        
-            <button class="cart-btn" onclick="openCart()" title="Voir l'historique">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M12 8v4l3 3m6-3c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M2 12h3m-3 0l2-2m-2 2l2 2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-                <span style="margin-left:6px">historique</span></button>
+<body> 
+      
+      
 
-            <a class="profile-btn" href="profile.php" title="Mon profil" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:25px;background:rgba(255,255,255,0.04);color:#fff;text-decoration:none">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="12" cy="8" r="3.2" stroke="#fff" stroke-width="1.4"/><path d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Profil</span>
-            </a>
-                <!-- Bouton Admin visible uniquement pour les administrateurs -->
-                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <a class="profile-btn" href="admin.php" title="Panneau d'administration" style="background: #ff0000ff; color: black;">
-                        Admin
-                    </a>
-                <?php endif; ?>
-                <!-- profile icon SVG -->
-                
-        </div>
-    </nav>
+
+
+
+
+    
+<nav style="padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 12, 41, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9SBs4aa8Qgupeysy-THcIR8-bRBQHiw1ITQ&s" alt="Best Dribbleur Store" style="height:40px;border-radius:6px;object-fit:cover">
+
+    <a href="acceuil.php" style="height:40px;border-radius:6px;object-fit:cover;font-size: 28px; font-weight: bold; color: #fff; text-decoration: none;"> Dribbleur Store</a>
+
+    
+    <div class="nav-actions" style="display:flex;gap:10px;align-items:center">
+        <a href="list_articles.php" class="cart-btn" style="text-decoration: none;">Comptes</a>
+
+        <button class="cart-btn" onclick="typeof openCart === 'function' && openCart()" title="Voir le panier">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h15l-1.5 9h-12L4 2H2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="margin-left:6px">Panier</span>
+            <span class="cart-count" id="cartCount">0</span>
+        </button>
+    
+        <a href="order_history.php" class="cart-btn" title="Voir l'historique des commandes" style="text-decoration: none;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3m6-3c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="margin-left:6px">Historique</span></a>
+
+        <a class="profile-btn" href="profile.php" title="Mon profil" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:25px;background:rgba(255,255,255,0.04);color:#fff;text-decoration:none">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="12" cy="8" r="3.2" stroke="#fff" stroke-width="1.4"/><path d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Profil</span>
+        </a>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+            <a class="profile-btn" href="admin.php" title="Panneau d'administration" style="background: #ff0000ff; color: black; text-decoration: none;">Admin</a>
+        <?php endif; ?>
+    </div>
+</nav>
 
     <section class="hero" id="home">
         <canvas id="canvas3d"></canvas>
@@ -108,7 +104,12 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
                 <?php foreach($recent as $art): ?>
                     <div class="article-preview-card">
                         <?php if (!empty($art['image'])): ?>
-                            <img src="uploads/articles/<?php echo htmlspecialchars($art['image']); ?>" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+                            <img src="uploads/articles/<?php echo htmlspecialchars($art['image']); ?>" alt="" style=" width: 100%; height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: block;">
+    
                         <?php endif; ?>
                         <h3 style="color:#00d4ff;margin:0 0 8px"><?php echo htmlspecialchars($art['title']); ?></h3>
                         <p style="color:#d0d6db"><?php echo htmlspecialchars(mb_strimwidth(strip_tags($art['content']), 0, 140, '...')); ?></p>

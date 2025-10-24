@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
 // 4. Récupérer la liste de tous les articles
-$stmt = $pdo->query('SELECT id, title, price, image, author_username, created_at FROM articles ORDER BY created_at DESC');
+$stmt = $pdo->query('SELECT id, title, total_price, image, author_username, created_at FROM articles ORDER BY created_at DESC');
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -92,7 +92,7 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tr>
                             <td><img src="uploads/articles/<?php echo htmlspecialchars($article['image']); ?>" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;"></td>
                             <td><?php echo htmlspecialchars($article['title']); ?></td>
-                            <td><?php echo htmlspecialchars(number_format($article['price'], 0, ',', ' ')); ?> FCFA</td>
+                            <td><?php echo htmlspecialchars(number_format($article['total_price'], 0, ',', ' ')); ?> FCFA</td>
                             <td><?php echo htmlspecialchars($article['author_username']); ?></td>
                             <td><?php echo htmlspecialchars(date('d/m/Y', strtotime($article['created_at']))); ?></td>
                             <td>

@@ -50,15 +50,21 @@ try {
     $stmtCheck->execute($articleIds);
     $dbArticles = $stmtCheck->fetchAll(PDO::FETCH_KEY_PAIR);
 
-    $totalPrice = array_reduce($cart, function ($sum, $item) {
+    $totalPrice = array_reduce($cart, function ($sum, $item) use ($dbArticles) {
         // Utiliser le prix de la base de données, pas celui envoyé par le client
-        return $sum + (isset($dbArticles[$item['id']]) ? ($dbArticles[$item['id']] * 1) : 0); // 1 est la quantité, à adapter si besoin
+        return $sum + (isset($dbArticles[$item['id']]) ? floatval($dbArticles[$item['id']]) : 0);
     }, 0);
 
     // Insérer dans la table `orders`
     $pdo->beginTransaction();
-    $stmtOrder = $pdo->prepare('INSERT INTO orders (user_id, total_price) VALUES (:user_id, :total_price)');
-    $stmtOrder->execute([':user_id' => $userId, ':total_price' => $totalPrice]);
+    // Ajout du statut par défaut 'en_attente'
+    $stmtOrder = $pdo->prepare('INSERT INTO orders (user_id, total_price, status) VALUES (:user_id, :total_price, :status)');
+    $stmtOrder->execute([
+        ':user_id' => $userId, 
+        ':total_price' => $totalPrice,
+        ':status' => 'en_attente' // Statut par défaut
+    ]);
+
     $orderId = $pdo->lastInsertId();
     foreach ($cart as $item) {
         if (isset($item['id']) && isset($dbArticles[$item['id']])) {

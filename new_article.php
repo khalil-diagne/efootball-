@@ -22,7 +22,7 @@ if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_byt
         <label>Prix (en FCFA)<br><input type="number" name="price" required step="0.01" min="0"></label><br><br>
         <label>Image (jpg/png/gif, max 2MB)<br><input type="file" name="image" accept="image/*" required></label><br><br>
         <button type="submit">Publier</button>
-        <a href="profile.php" style="margin-left:12px">Annuler</a>
+        <a href="admin_articles.php" style="margin-left:12px">Annuler</a>
     </form>
 
 </body>

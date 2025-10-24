@@ -20,7 +20,7 @@ try {
 </head>
 <body>
     <nav style="padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 12, 41, 0.8); backdrop-filter: blur(10px);">
-    <a href="acceuil.php" style="font-size: 28px; font-weight: bold; color: #fff; text-decoration: none;">Best Dribbleur Store</a>
+    <a href="acceuil.php" style="font-size: 28px; font-weight: bold; color: #fff; text-decoration: none;"> Dribbleur Store</a>
         <div>
 
 
@@ -58,6 +58,11 @@ try {
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="acceuil.php" class="cta-button" style="padding: 12px 30px; font-size: 16px; text-decoration: none;">Retour à l'accueil</a>
+        </div>
+
     </div>
 
     <!-- Modal du panier (copié depuis acceuil.php) -->
