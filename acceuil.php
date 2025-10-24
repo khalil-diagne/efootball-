@@ -32,11 +32,15 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
 
     
 <nav style="padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 12, 41, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9SBs4aa8Qgupeysy-THcIR8-bRBQHiw1ITQ&s" alt="Best Dribbleur Store" style="height:40px;border-radius:6px;object-fit:cover">
-
-    <a href="acceuil.php" style="height:40px;border-radius:6px;object-fit:cover;font-size: 28px; font-weight: bold; color: #fff; text-decoration: none;"> Dribbleur Store</a>
-
-    
+    <a href="acceuil.php" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9SBs4aa8Qgupeysy-THcIR8-bRBQHiw1ITQ&s" alt="Best Dribbleur Store" style="height:60px; border-radius:6px;object-fit:cover">
+        <span style="font-size: 23px; font-weight: bold; color: linear-gradient(45deg, #00d4ff, #0099ff); margin-top:5px;    background: linear-gradient(45deg, #00d4ff, #0099ff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glow 2s 
+ease-in-out infinite alternate;">Dribbleur Store</span>
+    </a>
+   
     <div class="nav-actions" style="display:flex;gap:10px;align-items:center">
         <a href="list_articles.php" class="cart-btn" style="text-decoration: none;">Comptes</a>
 
