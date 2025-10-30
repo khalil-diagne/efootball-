@@ -7,6 +7,22 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
     exit();
 }
 
+// Récupérer l'ID de l'utilisateur et le stocker en session pour la messagerie
+if (!isset($_SESSION['user_id_from_db'])) {
+    try {
+        $pdo = new PDO('mysql:host=localhost;dbname=efootball;charset=utf8mb4', 'root', '');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+        $stmt = $pdo->prepare('SELECT id FROM visiteur WHERE username = :username');
+        $stmt->execute([':username' => $_SESSION['username']]);
+        $user_id = $stmt->fetchColumn();
+        if ($user_id) {
+            $_SESSION['user_id_from_db'] = $user_id;
+        }
+    } catch (PDOException $e) {
+        // Gérer l'erreur discrètement, sans bloquer la page
+    }
+}
 ?>
 
 
@@ -19,6 +35,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="js_acceuil.js"></script>
     <link href="Style_acceuil.css" rel="stylesheet" type="text/css">
+    <link href="chat_styles.css" rel="stylesheet" type="text/css"> <!-- Styles pour la messagerie -->
 </head>
 <body> 
 <nav style="padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 12, 41, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05);">
@@ -58,13 +75,10 @@ ease-in-out infinite alternate;">Dribbleur Store</span>
         <canvas id="canvas3d"></canvas>
         <div class="hero-content">
             <h1>Comptes eFootball Premium</h1>
-            <p>Les meilleurs comptes avec joueurs légendaires</p>
+            <p class="testimonial-text">Fatigué de passer des heures à construire votre équipe de rêve ? Notre mission est de vous donner un accès instantané à des comptes eFootball exceptionnels, chargés de joueurs légendaires et de pièces, pour que vous puissiez dominer le terrain sans attendre. C'est rapide, sécurisé et garanti ✓</p>
             
             <div class="hero-badges">
                 <div class="badge">✓ Livraison Immédiate</div>
-                <div class="badge">✓ 100% Sécurisé</div>
-            <div class="hero-badges">
-                <div class="badge">✓ Livraison Instantanée</div>
                 <div class="badge">✓ 100% Sécurisé</div>
                 <div class="badge">✓ Garantie 30 Jours</div>
                 <div class="badge">✓ Support 24/7</div>
@@ -239,5 +253,28 @@ ease-in-out infinite alternate;">Dribbleur Store</span>
             </button>
         </div>
     </div>
+    <!-- Widget de Messagerie -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <span>Chat avec le support</span>
+            <span class="close-chat" onclick="toggleChat()">&times;</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- Les messages seront chargés ici -->
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="Tapez votre message...">
+            <button id="sendChatBtn">Envoyer</button>
+        </div>
+    </div>
 
+    <button class="chat-toggle-button" onclick="toggleChat()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    </button>
+
+    <script src="chat_client.js"></script>
+</body>
+</html>
+
+   
    

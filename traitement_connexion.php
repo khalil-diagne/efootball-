@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-
     $sql = 'SELECT id, prenom, nom, email, username, password, role FROM visiteur WHERE username = :username LIMIT 1';
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':username', $username);

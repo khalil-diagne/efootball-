@@ -50,17 +50,23 @@ try {
         exit();
     }
 
-    // Calculer le prix total à partir des prix sécurisés de la BDD
+    // Calculer le prix total à partir des prix sécurisés de la BDD    
+
+
+
+    // la plus importante est la fonction array_reduce aui reduit un tableau en une seule valeur 
+
     $totalPrice = array_reduce($dbArticles, function ($sum, $item) {
         return $sum + floatval($item['price']);
     }, 0);
 
     // 5. Sauvegarder le panier validé et le total dans la session
     // On ne stocke que les articles qui ont été vérifiés en BDD
+    // avec ca on enregistre les nouveaux paniers avec leurs prix totaux
     $_SESSION['cart_for_checkout'] = $dbArticles;
     $_SESSION['cart_total_price'] = $totalPrice;
-
-    // 6. Construire l'URL de paiement Wave directe
+ 
+    // dama sonnu si api yi motakh de ce fait , j'ai creer un wave business et j'ai subdiviser l'url pour generer un le montant correspondant 
     $waveBaseUrl = "https://pay.wave.com/m/M_sn_v_ayijpULtTM/c/sn/";
     $paymentUrl = $waveBaseUrl . "?amount=" . $totalPrice;
 

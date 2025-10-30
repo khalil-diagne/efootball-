@@ -9,7 +9,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Connexion eFootball</title>
+    <title>Dribbleur Store - Connexion</title>
     <style>
         /* Style global pour un thème gaming plus fluide et dynamique */
         body {
@@ -51,7 +51,7 @@ session_start();
         .logo {
             display: block;
             margin: 0 auto 20px auto; /* Centrer le logo */
-            width: 150px; /* Taille adaptable */
+            width: 190px; /* Taille adaptable */
             animation: fadeIn 1s ease-in; /* Animation d'apparition fluide */
             border-radius: 10px; /* Coins arrondis pour un style gaming */
         }
@@ -127,7 +127,7 @@ session_start();
         <!-- Ajout du logo -->
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPaMEBxEFKZDyKze1PbLLKgv-PZ2BJQkJd1Q&s" alt="Logo eFootball" class="logo"> <!-- Remplacez par l'URL réelle du logo -->
         
-        <h1>Page de Connexion eFootball</h1>
+        <h1>Dribbleur Store </h1>
         
         <!-- Formulaire de connexion simplifié -->
         <?php if (isset($_GET['error'])): ?>
