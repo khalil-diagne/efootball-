@@ -19,18 +19,8 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="js_acceuil.js"></script>
     <link href="Style_acceuil.css" rel="stylesheet" type="text/css">
-
-    
 </head>
 <body> 
-      
-      
-
-
-
-
-
-    
 <nav style="padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 12, 41, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05);">
     <a href="acceuil.php" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9SBs4aa8Qgupeysy-THcIR8-bRBQHiw1ITQ&s" alt="Best Dribbleur Store" style="height:60px; border-radius:6px;object-fit:cover">
@@ -44,7 +34,7 @@ ease-in-out infinite alternate;">Dribbleur Store</span>
     <div class="nav-actions" style="display:flex;gap:10px;align-items:center">
         <a href="list_articles.php" class="cart-btn" style="text-decoration: none;">Comptes</a>
 
-        <button class="cart-btn" onclick="typeof openCart === 'function' && openCart()" title="Voir le panier">
+        <button class="cart-btn" onclick="openCart()" title="Voir le panier">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h15l-1.5 9h-12L4 2H2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span style="margin-left:6px">Panier</span>
             <span class="cart-count" id="cartCount">0</span>
@@ -117,7 +107,7 @@ ease-in-out infinite alternate;">Dribbleur Store</span>
                         <?php endif; ?>
                         <h3 style="color:#00d4ff;margin:0 0 8px"><?php echo htmlspecialchars($art['title']); ?></h3>
                         <p style="color:#d0d6db"><?php echo htmlspecialchars(mb_strimwidth(strip_tags($art['content']), 0, 140, '...')); ?></p>
-                        <div style="margin-top:10px"><a href="/efootball/list_articles.php" style="color:#00ff88">Voir tous les articles</a></div>
+                        <div style="margin-top:10px"><a href="/efootball local/list_articles.php" style="color:#00ff88">Voir tous les articles</a></div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

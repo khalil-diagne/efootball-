@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 // Connexion DB (même config que les autres fichiers)
 try {
-    $dbHost = 'localhost';
+    $dbHost = 'localhost'; // ca dependra du deploiement
     $dbUser = 'root';
     $dbPass = '';
     $dbName = 'efootball';
@@ -16,7 +16,9 @@ try {
     die('Erreur BDD: ' . $e->getMessage());
 }
 
-// Si l'utilisateur n'est pas connecté, rediriger
+// Si l'utilisateur n'est pas connecté, rediriger  
+
+// la fonction isset 
 if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
     header('Location: connexion.php');
     exit();

@@ -13,8 +13,9 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['logged']) || $_SESSION['l
 // 2. Récupérer les données du panier envoyées en JSON
 $json = file_get_contents('php://input');
 $cart = json_decode($json, true);
-
-if (empty($cart)) {
+ 
+// Validation améliorée du panier
+if (!is_array($cart) || empty($cart)) {
     http_response_code(400); // Bad Request
     echo json_encode(['success' => false, 'message' => 'Le panier est vide.']);
     exit();
@@ -30,57 +31,44 @@ try {
     exit();
 }
 
-// 4. Logique d'enregistrement de la commande
+// 4. Calculer le prix total et valider les articles du panier
 try {
-    // Récupérer l'ID de l'utilisateur
-    $stmtUser = $pdo->prepare('SELECT id FROM visiteur WHERE username = :username LIMIT 1');
-    $stmtUser->execute([':username' => $_SESSION['username']]);
-    $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        throw new Exception("Utilisateur non trouvé.");
-    }
-    $userId = $user['id'];
-
-    // Calculer le prix total
-    // On valide que les articles du panier existent bien en base de données
     $articleIds = array_column($cart, 'id');
+    if (empty($articleIds)) {
+        throw new Exception("Le panier ne contient aucun article valide.");
+    }
+    
     $placeholders = implode(',', array_fill(0, count($articleIds), '?'));
     $stmtCheck = $pdo->prepare("SELECT id, price FROM articles WHERE id IN ($placeholders)");
     $stmtCheck->execute($articleIds);
-    $dbArticles = $stmtCheck->fetchAll(PDO::FETCH_KEY_PAIR);
+    $dbArticles = $stmtCheck->fetchAll(PDO::FETCH_ASSOC);
 
-    $totalPrice = array_reduce($cart, function ($sum, $item) use ($dbArticles) {
-        // Utiliser le prix de la base de données, pas celui envoyé par le client
-        return $sum + (isset($dbArticles[$item['id']]) ? floatval($dbArticles[$item['id']]) : 0);
+    // Si certains articles du panier n'existent plus en BDD, on lève une erreur
+    if (count($dbArticles) !== count($articleIds)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Certains articles de votre panier ne sont plus disponibles. Veuillez rafraîchir la page.']);
+        exit();
+    }
+
+    // Calculer le prix total à partir des prix sécurisés de la BDD
+    $totalPrice = array_reduce($dbArticles, function ($sum, $item) {
+        return $sum + floatval($item['price']);
     }, 0);
 
-    // Insérer dans la table `orders`
-    $pdo->beginTransaction();
-    // Ajout du statut par défaut 'en_attente'
-    $stmtOrder = $pdo->prepare('INSERT INTO orders (user_id, total_price, status) VALUES (:user_id, :total_price, :status)');
-    $stmtOrder->execute([
-        ':user_id' => $userId, 
-        ':total_price' => $totalPrice,
-        ':status' => 'en_attente' // Statut par défaut
-    ]);
+    // 5. Sauvegarder le panier validé et le total dans la session
+    // On ne stocke que les articles qui ont été vérifiés en BDD
+    $_SESSION['cart_for_checkout'] = $dbArticles;
+    $_SESSION['cart_total_price'] = $totalPrice;
 
-    $orderId = $pdo->lastInsertId();
-    foreach ($cart as $item) {
-        if (isset($item['id']) && isset($dbArticles[$item['id']])) {
-            $stmtItem = $pdo->prepare('INSERT INTO order_items (order_id, article_id, quantity, price) VALUES (:order_id, :article_id, :quantity, :price)');
-            $stmtItem->execute([
-                ':order_id' => $orderId, 
-                ':article_id' => $item['id'], // Assurez-vous que les articles dans le JS ont un 'id'
-                ':quantity' => 1, // Quantité fixe pour le moment
-                ':price' => $dbArticles[$item['id']] // Prix sécurisé depuis la BDD
-            ]);
-        }
-    }
-    $pdo->commit();
-    echo json_encode(['success' => true, 'message' => 'Commande enregistrée avec succès!', 'order_id' => $orderId]);
+    // 6. Construire l'URL de paiement Wave directe
+    $waveBaseUrl = "https://pay.wave.com/m/M_sn_v_ayijpULtTM/c/sn/";
+    $paymentUrl = $waveBaseUrl . "?amount=" . $totalPrice;
+
+    // 7. Renvoyer l'URL au client pour redirection
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true, 'message' => 'Redirection vers Wave pour le paiement.', 'paymentUrl' => $paymentUrl]);
+
 } catch (Exception $e) {
-    $pdo->rollBack();
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'enregistrement de la commande: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Erreur lors de la préparation de la commande: ' . $e->getMessage()]);
 }

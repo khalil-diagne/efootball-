@@ -71,9 +71,7 @@ try {
             <span class="close-modal" onclick="closeCart()">&times;</span>
             <h2>🛒 Votre Panier</h2>
             <div id="cartItems"></div>
-            <button class="cta-button" style="width: 100%; margin-top: 20px;" onclick="checkout()">
-                Procéder au paiement
-            </button>
+            <button class="cta-button" style="width: 100%; margin-top: 20px;" onclick="checkout()">Procéder au paiement</button>
         </div>
     </div>
 
@@ -87,6 +85,7 @@ try {
                 title: article.title,
                 price: parseFloat(article.price)
             };
+        
             cart.push(item);
             updateCart();
             showNotification('✓ Article ajouté au panier !');
@@ -127,7 +126,10 @@ try {
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)">
                         <div>
                             <div style="font-weight:600">${it.title}</div>
+    
                         </div>
+                    
+
                         <div style="text-align:right">
                             <div style="font-weight:700">${it.price} FCFA</div>
                             <button onclick="removeFromCart(${idx})" style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#ff4d6d;color:#fff;border:none">Supprimer</button>
@@ -150,17 +152,50 @@ try {
         }
 
         function checkout() {
-            if (cart.length === 0) { alert('Votre panier est vide.'); return; }
-            fetch('checkout.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cart) })
+            if (cart.length === 0) {
+                alert('Votre panier est vide.');
+                return;
+            }
+
+            // Amélioration UX : désactiver le bouton et afficher un message de chargement
+            const checkoutButton = document.querySelector('#cartModal .cta-button');
+            const originalButtonText = checkoutButton.textContent;
+            checkoutButton.disabled = true;
+            checkoutButton.textContent = 'Préparation du paiement...';
+
+            fetch('checkout.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cart)
+            })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    alert('Commande réussie ! Votre numéro de commande est : ' + data.order_id);
-                    cart = [];
-                    updateCart();
-                    closeCart();
-                } else { alert('Erreur: ' + data.message); }
-            }).catch(error => { console.error('Erreur:', error); alert('Une erreur technique est survenue.'); });
+                if (data.success && data.paymentUrl) {
+                    // Afficher un message de confirmation avant de rediriger
+                    const message = "Vous allez être redirigé vers Wave pour finaliser votre paiement.\n\nIMPORTANT : Après le paiement, veuillez nous envoyer une capture d'écran de la transaction sur WhatsApp au 77 507 29 36 pour valider votre commande.\n\nCliquez sur 'OK' pour continuer.";
+                    
+                    if (confirm(message)) {
+                        // Si l'utilisateur clique sur OK, on le redirige
+                        cart = [];
+                        updateCart();
+                        closeCart();
+                        window.location.href = data.paymentUrl;
+                    } else {
+                        // Si l'utilisateur annule, on réactive le bouton
+                        checkoutButton.disabled = false;
+                        checkoutButton.textContent = originalButtonText;
+                    }
+                } else {
+                    alert('Erreur lors de la création du paiement : ' + (data.message || 'Réponse invalide du serveur.'));
+                    checkoutButton.disabled = false;
+                    checkoutButton.textContent = originalButtonText;
+                }
+            }).catch(error => {
+                console.error('Erreur:', error);
+                alert('Une erreur technique est survenue. Veuillez réessayer.');
+                checkoutButton.disabled = false;
+                checkoutButton.textContent = originalButtonText;
+            });
         }
 
         // Initialiser le compteur au chargement de la page

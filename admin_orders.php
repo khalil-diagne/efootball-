@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -8,6 +9,7 @@ if (!isset($_SESSION['logged']) || $_SESSION['logged'] !== true || !isset($_SESS
     header('Location: connexion.php');
     exit();
 }
+
 
 // 2. Connexion à la base de données
 try {
@@ -33,6 +35,7 @@ $stmt = $pdo->query(
         o.order_date DESC'
 );
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 <!DOCTYPE html>

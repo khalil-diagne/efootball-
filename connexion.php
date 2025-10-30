@@ -177,7 +177,7 @@ ease;
 
             // Si un champ est vide, empêcher la soumission et afficher le message d'erreur
             if (username === "" || password === "") {
-                event.preventDefault();
+                event.preventDefault();event.preventDefault();
                 errorMessage.textContent = "Veuillez remplir tous les champs !";
             } else {
                 // Champs valides : laisser le navigateur soumettre le formulaire normalement
